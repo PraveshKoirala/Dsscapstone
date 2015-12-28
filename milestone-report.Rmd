@@ -5,6 +5,9 @@ date: "December 27, 2015"
 output: html_document
 ---
 
+*To see the code for this project, go to this*
+[repository](https://github.com/PraveshKoirala/Dsscapstone)
+
 ## About
 In this project, we document our effort to create a *next word prediction model* in R. We load our data and perform a preliminary analysis as well as create a mock n-gram model using a small sample of the data to illustrate the features of the data.
 
@@ -65,7 +68,7 @@ size_MB <- c(object.size(tweets), object.size(blogs), object.size(news))/1024/10
 lines <- c(length(tweets), length(blogs), length(news))
 words <- c(tweets_word, blogs_word, news_word)
 
-df = data.frame(size_MB=size_MB, lines_count=lines, words_count=words, row.names = c("tweets", "blogs", "news"))
+df = data.frame(object_size_MB=size_MB, lines_count=lines, words_count=words, row.names = c("tweets", "blogs", "news"))
 kable(df)
 ```
 
@@ -75,7 +78,7 @@ For the purpose of creating ngrams, we'll be sampling from our data. Currently, 
 
 ```{r, echo=FALSE, results='hide',message=FALSE}
 # Five percent
-sample_percent = 0.05
+sample_percent = 0.01
 set.seed(10)
 sample_news <- sample(news, size = length(news)*sample_percent)
 sample_blogs <- sample(blogs, size = length(blogs)*sample_percent)
