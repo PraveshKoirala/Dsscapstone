@@ -1,0 +1,154 @@
+---
+title: "Making a word prediction model in R"
+author: "Pravesh Koirala"
+date: "December 27, 2015"
+output: html_document
+---
+
+## About
+In this project, we document our effort to create a *next word prediction model* in R. We load our data and perform a preliminary analysis as well as create a mock n-gram model using a small sample of the data to illustrate the features of the data.
+
+## Loading and exploring the data
+The data used for this project can be acquired from this [link](https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip).
+
+After the data is downloaded, we can extract its content. There are three different text files each from different sources:
+
+* Tweets
+* News
+* Blogs
+
+```{r, warning=FALSE, cache=TRUE, echo=FALSE, results='hide',message=FALSE}
+if (!exists("tweets")){
+  tweets <- readLines("en_US/en_US.twitter.txt", encoding="UTF-8")
+  blogs <- readLines("en_US/en_US.blogs.txt", encoding="UTF-8")
+  news <- readLines("en_US/en_US.news.txt", encoding="UTF-8")
+}
+```
+
+Once the data is loaded, we perform some investigations
+```{r, echo=FALSE, results='hide',message=FALSE, cache=TRUE}
+library(stringi)
+
+# stringi is a R string library which is blazingly fast.. we'll be doing many string
+# operations with it
+
+# word count for each of the files
+tweets_word<-sum(stri_count(tweets, regex="\\s+"))
+blogs_word<-sum(stri_count(blogs, regex="\\s+"))
+news_word<-sum(stri_count(news, regex="\\s+"))
+
+```
+
+First, we take a look at some of our data samples.
+
+Tweets,
+```{r, echo=FALSE}
+head(tweets, n =2)
+```
+
+Blogs,
+```{r, echo=FALSE}
+head(blogs, n =2)
+```
+
+News,
+```{r, echo=FALSE}
+head(news, n =2)
+```
+
+Overall, our data can be succintly summarized as follows:
+
+```{r, results='asis', echo=FALSE}
+library(knitr)
+
+size_MB <- c(object.size(tweets), object.size(blogs), object.size(news))/1024/1024
+lines <- c(length(tweets), length(blogs), length(news))
+words <- c(tweets_word, blogs_word, news_word)
+
+df = data.frame(size_MB=size_MB, lines_count=lines, words_count=words, row.names = c("tweets", "blogs", "news"))
+kable(df)
+```
+
+## n-gram analysis
+
+For the purpose of creating ngrams, we'll be sampling from our data. Currently, we have sampled one percent from each of the file and aggregated them together to create our corpus.
+
+```{r, echo=FALSE, results='hide',message=FALSE}
+# Five percent
+sample_percent = 0.05
+set.seed(10)
+sample_news <- sample(news, size = length(news)*sample_percent)
+sample_blogs <- sample(blogs, size = length(blogs)*sample_percent)
+sample_tweets <- sample(tweets, size = length(tweets)*sample_percent)
+
+data <- paste(sample_news, sample_blogs, sample_tweets)
+```
+
+Then we clean the text. This is done using the library `stringi` as it is extremely fast for string processing. The cleaning process involves
+
+1. setting all words to lower cases
+2. removing numbers and punctuations
+3. profanity filtering
+
+```{r, echo=FALSE, results='hide',message=FALSE, cache=TRUE}
+library(quanteda)
+# tokenize, get all words down here
+data <- stri_trans_tolower(data)
+# Remove numbers
+data <- stri_replace_all_regex(data, "[0-9]+", "")
+# Remove punctuations
+data <- stri_replace_all_regex(data, "[[:punct:]]", "")
+# profanities filtering (courtesy, seven words of George Carlin)
+profanities_regex <- "(fuck|shit|piss|motherfuck|cocksuck)[^ $]*|cunt|dick"
+data <- stri_replace_all_regex(data, profanities_regex, "")
+# Extract remaining words.. hopefully, they are clean.
+all_words <- stri_extract_all_words(data)
+all_words <- sapply(all_words, function(c){stri_join(c, collapse=" ")})
+
+c <- corpus(all_words)
+unigrams <- dfm(c, ngrams=1)
+bigrams <- dfm(c, ngrams=2)
+trigrams <- dfm(c, ngrams=3)
+
+top_unigrams <- colSums(sort(unigrams))
+top_bigrams <- colSums(sort(bigrams))
+top_trigrams <- colSums(sort(trigrams))
+```
+
+Then we create our ngram model using quatenda.
+
+Some of the results that were observed are as follows:
+
+The top 10 unigrams:
+```{r, echo=FALSE}
+top_unigrams[1:10]
+```
+
+The top 10 bigrams
+```{r, echo=FALSE}
+top_bigrams[1:10]
+```
+
+Top 10 trigrams
+```{r, echo=FALSE}
+top_trigrams[1:10]
+```
+
+Similarly, the plot of the histograms for the corresponding n-grams upto trigrams are as follows:
+
+```{r, echo=FALSE}
+par(mfrow=c(2,2))
+hist(top_unigrams)
+hist(top_bigrams)
+hist(top_trigrams)
+```
+
+As can be seen from the plots, the histograms are greatly skewed towards some highly common n-grams.
+
+## Plans for future
+
+* Substitute equivalent words for the condensed ones.. i.e. i've to i have and so on
+* Separate sentences.
+* If possible, clean up the words further..
+* Investigate some models like Good-Turing, HMM and even Stupid backoff for model building
+
