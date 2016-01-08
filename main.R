@@ -34,8 +34,8 @@ for (name in names(clean_chunks[1:3])){
     trigrams[is.na(trigrams)] <- 0
     bigrams[is.na(bigrams)] <- 0
     
-    trigrams[, ':='(count = count.x + count.y)]
-    bigrams[, ':='(count = count.x + count.y)]
+    trigrams[, count := count.x + count.y]
+    bigrams[, count := count.x + count.y]
     
     trigrams <- trigrams[, .(text, count)]
     bigrams <- bigrams[, .(text, count)]
