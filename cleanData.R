@@ -15,6 +15,5 @@ cleanData <- function(data){
   
   # Extract remaining words.. hopefully, they are clean.
   all_words <- stri_extract_all_words(data)
-  
-  all_words
+  sapply(all_words, function(c){stri_join(c, collapse=" ")})
 }
