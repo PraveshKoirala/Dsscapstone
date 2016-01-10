@@ -41,3 +41,15 @@ for (name in names(clean_chunks)){
     bigrams <- bigrams[, .(text, count)]
   }
 }
+
+t_beginword <- sapply(strsplit(trigrams[, text], "_"), function(x){paste0(x[1:(length(x)-1)], collapse = "_")})
+t_endword <- sapply(strsplit(trigrams[, text], "_"), function(x){paste0(x[length(x)], collapse = "_")})
+
+b_beginword <- sapply(strsplit(bigrams[, text], "_"), function(x){paste0(x[1:(length(x)-1)], collapse = "_")})
+b_endword <- sapply(strsplit(bigrams[, text], "_"), function(x){paste0(x[length(x)], collapse = "_")})
+
+bigrams[, end:=b_endword][, text:=b_beginword]
+trigrams[, end:=t_endword][, text:=t_beginword]
+
+saveRDS(bigrams, file="bigrams.rds")
+saveRDS(trigrams, file="trigrams.rds")

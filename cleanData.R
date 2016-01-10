@@ -1,4 +1,4 @@
-cleanData <- function(data){
+cleanData <- function(data, tokenize=F){
   library(stringi)
   
   # tokenize, get all words down here
@@ -15,5 +15,9 @@ cleanData <- function(data){
   
   # Extract remaining words.. hopefully, they are clean.
   all_words <- stri_extract_all_words(data)
-  sapply(all_words, function(c){stri_join(c, collapse=" ")})
+  if (tokenize)
+    return(all_words)
+  else
+    return(sapply(all_words, function(c){stri_join(c, collapse=" ")}))
+    
 }

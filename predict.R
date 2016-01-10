@@ -4,11 +4,11 @@ require(data.table)
 source("choose_grams.R")
 source("cleanData.R")
 
-predict_unigram <- function(x_vector, ends_with_space = T){
+predict_unigram <- function(x_vector){
   return ("the")
 }
 
-predict_bigram <- function(x, ends_with_space = T){
+predict_bigram <- function(x){
   
   #print ("At predict_bigram")
   
@@ -17,20 +17,15 @@ predict_bigram <- function(x, ends_with_space = T){
     bigrams = readRDS("bigrams.rds")
   }
   l <- length(x)
-  if (!ends_with_space) 
-    d <- x[l-1:l]
-  else
-    d <- x[l]
-  d <- paste0(d, collapse="_")
-  if (ends_with_space)
-    d <- sprintf("^%s_", d)
-  else
-    d <- sprintf("^%s", d)
   
-  bigrams[text %like% d][order(-count)][1:20][,text:=sapply(strsplit(text, "_"), function(x){x[length(x)]})]
+  d <- x[l]
+  
+  d <- paste0(d, collapse="_")
+  
+  bigrams[d][order(-count), .(end, count)][1:100]
 }
 
-predict_trigram <- function(x, ends_with_space = T){
+predict_trigram <- function(x){
   
   #print ("At predict trigram")
   
@@ -39,25 +34,19 @@ predict_trigram <- function(x, ends_with_space = T){
   }
 
   l <- length(x)
-  if (!ends_with_space) 
-    d <- x[(l-2):l]
-  else
-    d <- x[(l-1):l]
+  
+  d <- x[(l-1):l]
   
   d <- stri_join(d, collapse="_")
   
-  if (ends_with_space)
-    d <- sprintf("^%s_", d)
-  else
-    d <- sprintf("^%s", d)
   
-  trigrams[text %like% d][order(-count)][1:10][,text:=sapply(strsplit(text, "_"), function(x){x[length(x)]})]
+  trigrams[d][order(-count), .(end, count)][1:100]
   
 }
 
 
 predict <- function(x){
-  print(x)
+  
   # x is a string that represents the preceding words.
   # if x ends on a space, we give a new word, else we give a word beginning
   # with that letter.
@@ -65,29 +54,21 @@ predict <- function(x){
   # when in doubt, return "the"
   if (!is.character(x)| length(x) == 0) return ("the")
   
-  x <- cleanData(x)
+  x_vector <- cleanData(x, tokenize=T)[[1]]
   
-  if (grepl(" $", x))
-    ends_with_space <- 1
-  else
-    ends_with_space <- 0
+  if (any(is.na(x_vector))) return ("the")
   
-  # comment this to add this functionality
-  ends_with_space <- 1
-  
-  x_vector <- strsplit(x, " ", fixed = T)[[1]]
-  
-  gram <- length(x_vector) - !ends_with_space
+  gram <- length(x_vector)
   
   t <- b <- u <- NULL
   
   if (gram > 1){
-    t <- predict_trigram(x_vector, ends_with_space)
+    t <- predict_trigram(x_vector)
   }
   if (gram > 0){
-    b <- predict_bigram(x_vector, ends_with_space)
+    b <- predict_bigram(x_vector)
   }
-  u <- predict_unigram(x_vector, ends_with_space)
+  u <- predict_unigram(x_vector)
   
   return (choose_grams(t, b, u))
 }
