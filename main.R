@@ -15,7 +15,7 @@ saveRDS(clean_chunks, file="clean_chunks.rds")
 
 initialized <- F
 
-for (name in names(clean_chunks[1:3])){
+for (name in names(clean_chunks)){
   print (sprintf("Creating a corpus for %s", name))
   
   d <- na.omit(clean_chunks[[name]])
