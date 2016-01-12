@@ -4,7 +4,7 @@ empty_DT <- function (dt){
   return (nrow(dt) == 0)
 }
 
-choose_grams <- function(t, b, u){
+choose_grams <- function(t, b, u, word){
   # t := trigrams, b:= bigrams, u:= unigrams
   if (empty_DT(t)){
     if (empty_DT(b))
@@ -12,15 +12,30 @@ choose_grams <- function(t, b, u){
     return (b[1])
   }
   
-  choose_trigrams_bigrams(t, b)
+  choose_trigrams_bigrams_kneser_ney_interpolation(t, b, word)
 }
 
-choose_trigrams_bigrams <- function (t, b){
-  # Threshold to be changed
-  threshold <- 0.01
+choose_trigrams_bigrams_stupid_backoff <- function (t, b){
+  
   new <- merge(t, b, all=T, by="end", allow.cartesian=T)
-  new <- new[order(-count.x)]
-  new[, ratio:=count.x/count.y]
-  new <- new[ratio>threshold]
-  new[1:3, end]
+  new[is.na(new)] = 0
+  new <- new[order(-count.x, -count.y)]
+  new[1:min(3, length(end)), end]
+}
+
+choose_trigrams_bigrams_kneser_ney_interpolation <- function(t, b, word){
+  # smoothen the trigrams probabilities
+  
+  # discounting factor
+  du = 3
+  cu = sum(t[, count])
+  tu= nrow(t)
+  
+  t[, p_ikn:=max(0, count - du)/cu]
+  
+  # For the bigrams,
+  # subset of the trigrams that contain the middle word as the follows
+  temp = trigrams[midword==word[length(word)-1]]
+  temp = temp[, .(count=.N), by = list(midword, end)]
+  
 }

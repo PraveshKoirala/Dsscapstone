@@ -44,6 +44,7 @@ for (name in names(clean_chunks)){
 
 t_beginword <- sapply(strsplit(trigrams[, text], "_"), function(x){paste0(x[1:(length(x)-1)], collapse = "_")})
 t_endword <- sapply(strsplit(trigrams[, text], "_"), function(x){paste0(x[length(x)], collapse = "_")})
+t_midword <- sapply(strsplit(trigrams[, text], "_"), function(x){paste0(x[length(x)-1], collapse = "_")})
 
 b_beginword <- sapply(strsplit(bigrams[, text], "_"), function(x){paste0(x[1:(length(x)-1)], collapse = "_")})
 b_endword <- sapply(strsplit(bigrams[, text], "_"), function(x){paste0(x[length(x)], collapse = "_")})

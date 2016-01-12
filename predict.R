@@ -22,7 +22,7 @@ predict_bigram <- function(x){
   
   d <- paste0(d, collapse="_")
   
-  bigrams[d][order(-count), .(end, count)][1:100]
+  bigrams[d][order(-count), .(end, count)][1:min(100, length(text))]
 }
 
 predict_trigram <- function(x){
@@ -40,7 +40,7 @@ predict_trigram <- function(x){
   d <- stri_join(d, collapse="_")
   
   
-  trigrams[d][order(-count), .(end, count)][1:100]
+  trigrams[d][order(-count), .(end, count)][1:min(20, length(text))]
   
 }
 
@@ -70,6 +70,6 @@ predict <- function(x){
   }
   u <- predict_unigram(x_vector)
   
-  return (choose_grams(t, b, u))
+  return (choose_grams(t, b, u, x_vector))
 }
 
