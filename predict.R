@@ -3,6 +3,7 @@ require(data.table)
 
 source("choose_grams.R")
 source("cleanData.R")
+source("loaddata.R")
 
 predict_unigram <- function(x_vector){
   return ("the")
@@ -22,7 +23,7 @@ predict_bigram <- function(x){
   
   d <- paste0(d, collapse="_")
   
-  bigrams[d][order(-count), .(end, count)][1:min(100, length(text))]
+  bigrams[d][order(-count), .(end, count)]
 }
 
 predict_trigram <- function(x){
@@ -40,7 +41,7 @@ predict_trigram <- function(x){
   d <- stri_join(d, collapse="_")
   
   
-  trigrams[d][order(-count), .(end, count)][1:min(20, length(text))]
+  trigrams[d][order(-count), .(end, count)]
   
 }
 

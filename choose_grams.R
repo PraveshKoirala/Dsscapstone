@@ -30,7 +30,7 @@ choose_trigrams_bigrams_kneser_ney_interpolation <- function(t, b, word){
   # smoothen the trigrams probabilities
   
   # discounting factor
-  du = 3
+  du = sqrt(max(t[,count]))
   cu = sum(t[, count])
   tu= nrow(t)
   
@@ -38,11 +38,11 @@ choose_trigrams_bigrams_kneser_ney_interpolation <- function(t, b, word){
   
   # For the bigrams,
   # subset of the trigrams that contain the middle word as the follows
-  bi = trigrams[mid==word[length(word)-1]]
+  bi = trigrams[mid==word[length(word)]]
   bi = bi[, .(count=.N), by = list(mid, end)]
   
   cu_bi = sum(bi[,count])
-  du_bi = 1
+  du_bi = sqrt(max(bi[, count]))
   bi[, p_ikn:=(pmax(0, count-du_bi)/cu_bi)]
   
   # Now the unigram probabilities can be obtained from the bigram tables..
@@ -61,7 +61,7 @@ choose_trigrams_bigrams_kneser_ney_interpolation <- function(t, b, word){
   tri_bi[is.na(tri_bi)] = 0
   tri_bi[, p_ikn:=p_ikn.x + du*tu/cu * p_ikn.y]
   
-  tri_bi[order(-p_ikn), .(end, p_ikn)]
+  tri_bi[order(-p_ikn), .(end)][1:min(3, .N)]
   
   
   

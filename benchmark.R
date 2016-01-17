@@ -214,7 +214,7 @@ predict.baseline <- function(x){c('the', 'on', 'a')}
 # 04. Perform the benchmark
 #
 ################################################################################################
-benchmark(predict.baseline, 
+benchmark(predict, 
           # additional parameters to be passed to the prediction function can be inserted here
           sent.list = list('tweets' = tweets, 
                            'blogs' = blogs), 
