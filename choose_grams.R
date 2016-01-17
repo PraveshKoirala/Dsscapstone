@@ -12,8 +12,8 @@ choose_grams <- function(t, b, u, word){
     return (b[1])
   }
   
-  # choose_trigrams_bigrams_kneser_ney_interpolation(t, b, word)
-  choose_trigrams_bigrams_stupid_backoff(t, b)
+  choose_trigrams_bigrams_kneser_ney_interpolation(t, b, word)
+  # choose_trigrams_bigrams_stupid_backoff(t, b)
 }
 
 choose_trigrams_bigrams_stupid_backoff <- function (t, b){
@@ -34,14 +34,34 @@ choose_trigrams_bigrams_kneser_ney_interpolation <- function(t, b, word){
   cu = sum(t[, count])
   tu= nrow(t)
   
-  t[, p_ikn:=max(0, count - du)/cu]
+  t[, p_ikn:=pmax(0, count - du)/cu]
   
   # For the bigrams,
   # subset of the trigrams that contain the middle word as the follows
-  temp = trigrams[mid==word[length(word)-1]]
-  temp = temp[, .(count=.N), by = list(mid, end)]
+  bi = trigrams[mid==word[length(word)-1]]
+  bi = bi[, .(count=.N), by = list(mid, end)]
   
+  cu_bi = sum(bi[,count])
+  du_bi = 1
+  bi[, p_ikn:=(pmax(0, count-du_bi)/cu_bi)]
   
+  # Now the unigram probabilities can be obtained from the bigram tables..
+  uni = bi[, .(count=.N), by = end]
+  uni[, p_ikn:=count/sum(count)]
+  
+  # merge bigram and unigram
+  bi_uni = merge(x=bi[, .(end, p_ikn)], y=uni[, .(end, p_ikn)], all=T, by="end")
+  bi_uni[is.na(bi_uni)] = 0
+  
+  bi_uni[, p_ikn:=p_ikn.x + du_bi*p_ikn.y]
+  
+  # merge bigram and trigrams
+  tri_bi = merge(t[, .(end, p_ikn)], bi_uni[, .(end, p_ikn)], all = T, by="end")
+  
+  tri_bi[is.na(tri_bi)] = 0
+  tri_bi[, p_ikn:=p_ikn.x + du*tu/cu * p_ikn.y]
+  
+  tri_bi[order(-p_ikn), .(end, p_ikn)]
   
   
   
