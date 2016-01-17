@@ -12,7 +12,8 @@ choose_grams <- function(t, b, u, word){
     return (b[1])
   }
   
-  choose_trigrams_bigrams_kneser_ney_interpolation(t, b, word)
+  # choose_trigrams_bigrams_kneser_ney_interpolation(t, b, word)
+  choose_trigrams_bigrams_stupid_backoff(t, b)
 }
 
 choose_trigrams_bigrams_stupid_backoff <- function (t, b){
@@ -20,7 +21,9 @@ choose_trigrams_bigrams_stupid_backoff <- function (t, b){
   new <- merge(t, b, all=T, by="end", allow.cartesian=T)
   new[is.na(new)] = 0
   new <- new[order(-count.x, -count.y)]
-  new[1:min(3, length(end)), end]
+  # new[1:min(3, length(end)), end]
+  print(new[, end])
+  new[1, end]
 }
 
 choose_trigrams_bigrams_kneser_ney_interpolation <- function(t, b, word){
@@ -35,7 +38,11 @@ choose_trigrams_bigrams_kneser_ney_interpolation <- function(t, b, word){
   
   # For the bigrams,
   # subset of the trigrams that contain the middle word as the follows
-  temp = trigrams[midword==word[length(word)-1]]
-  temp = temp[, .(count=.N), by = list(midword, end)]
+  temp = trigrams[mid==word[length(word)-1]]
+  temp = temp[, .(count=.N), by = list(mid, end)]
+  
+  
+  
+  
   
 }
