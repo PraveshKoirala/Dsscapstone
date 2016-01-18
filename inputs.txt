@@ -1,0 +1,4 @@
+Fascinating inputs..
+
+A deck of (should be cards but gives the)
+input a (gives 0, shouldn't give 0)

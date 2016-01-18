@@ -1,0 +1,71 @@
+BASELINE
+--------
+Overall top-3 score:     6.64 %
+Overall top-1 precision: 5.42 %
+Overall top-3 precision: 8.11 %
+Average runtime:         0.07 msec
+Number of predictions:   28464
+Total memory used:       118.39 MB
+
+STUPID-BACKOFF
+--------
+Overall top-3 score:     16.05 %
+Overall top-1 precision: 12.58 %
+Overall top-3 precision: 18.29 %
+Average runtime:         10.16 msec
+Number of predictions:   28464
+Total memory used:       118.39 MB
+
+KNESER-NEY SQRT (max)
+---------
+Overall top-3 score:     12.60 %
+Overall top-1 precision: 8.99 %
+Overall top-3 precision: 15.60 %
+Average runtime:         28.75 msec
+Number of predictions:   28464
+Total memory used:       118.39 MB
+
+KNESER-NEY LOG (max)
+---------
+Overall top-3 score:     12.70 %
+Overall top-1 precision: 9.02 %
+Overall top-3 precision: 15.79 %
+Average runtime:         28.21 msec
+Number of predictions:   28464
+Total memory used:       118.39 MB
+
+KNESER-NEY SQRT(no uni)
+---------
+Overall top-3 score:     12.61 %
+Overall top-1 precision: 8.98 %
+Overall top-3 precision: 15.61 %
+Average runtime:         19.26 msec
+Number of predictions:   28464
+Total memory used:       118.42 MB
+
+KNESER-NEY LOG(no uni)
+--------
+Overall top-3 score:     12.69 %
+Overall top-1 precision: 9.01 %
+Overall top-3 precision: 15.78 %
+Average runtime:         19.29 msec
+Number of predictions:   28464
+Total memory used:       118.42 MB
+
+KNESER-NEY LOG(no uni, parallel du)
+--------
+Overall top-3 score:     12.53 %
+Overall top-1 precision: 9.01 %
+Overall top-3 precision: 15.48 %
+Average runtime:         19.91 msec
+Number of predictions:   28464
+Total memory used:       118.42 MB
+
+KNESER-NEY LOGLOG (no uni, parallel du)
+--------
+Overall top-3 score:     12.42 %
+Overall top-1 precision: 8.90 %
+Overall top-3 precision: 15.39 %
+Average runtime:         19.02 msec
+Number of predictions:   28464
+Total memory used:       118.42 MB

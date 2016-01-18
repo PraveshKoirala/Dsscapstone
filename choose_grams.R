@@ -12,25 +12,54 @@ choose_grams <- function(t, b, u, word){
     return (b[1])
   }
   
-  choose_trigrams_bigrams_kneser_ney_interpolation(t, b, word)
-  # choose_trigrams_bigrams_stupid_backoff(t, b)
+  # choose_trigrams_bigrams_kneser_ney_interpolation(t, b, word)
+  choose_trigrams_bigrams_kneser_ney_no_unigram_interpolation(t, b, word)
+  #choose_trigrams_bigrams_stupid_backoff(t, b)
 }
 
 choose_trigrams_bigrams_stupid_backoff <- function (t, b){
   
-  new <- merge(t, b, all=T, by="end", allow.cartesian=T)
+  new <- merge(t[1:min(10, length(t))], b[1:min(20, length(b))], all=T, by="end", allow.cartesian=T)
   new[is.na(new)] = 0
   new <- new[order(-count.x, -count.y)]
   # new[1:min(3, length(end)), end]
-  print(new[, end])
-  new[1, end]
+  #print(new[, end])
+  new[1:min(3, length(new)), end]
 }
+
+
+choose_trigrams_bigrams_kneser_ney_no_unigram_interpolation <- function(t, b, word){
+  # smoothen the trigrams probabilities
+  
+  # discounting factor
+  du_tri = log(log(t[,count]))
+  cu = sum(t[, count])
+  tu= nrow(t)
+  
+  t[, c("p_ikn", "du") := .(pmax(0, count - du_tri)/cu, du_tri)]
+  
+  # For the bigrams,
+  # subset of the trigrams that contain the middle word as the follows
+  bi = trigrams[mid==word[length(word)]]
+  bi = bi[, .(count=.N), by = list(mid, end)]
+  
+  bi[, p_ikn:= (count/sum(count))]
+  
+  # merge bigram and trigrams
+  tri_bi = merge(t[, .(end, p_ikn, du)], bi[, .(end, p_ikn)], all = T, by="end")
+  
+  tri_bi[is.na(tri_bi)] = 0
+  tri_bi[, p_ikn:=p_ikn.x + du*tu/cu * p_ikn.y]
+  
+  tri_bi[order(-p_ikn), .(end)][1:min(3, .N), end]
+}
+
 
 choose_trigrams_bigrams_kneser_ney_interpolation <- function(t, b, word){
   # smoothen the trigrams probabilities
   
   # discounting factor
-  du = sqrt(max(t[,count]))
+  du = sqrt(t[,count])
   cu = sum(t[, count])
   tu= nrow(t)
   
@@ -42,7 +71,7 @@ choose_trigrams_bigrams_kneser_ney_interpolation <- function(t, b, word){
   bi = bi[, .(count=.N), by = list(mid, end)]
   
   cu_bi = sum(bi[,count])
-  du_bi = sqrt(max(bi[, count]))
+  du_bi = log(max(bi[, count]))
   bi[, p_ikn:=(pmax(0, count-du_bi)/cu_bi)]
   
   # Now the unigram probabilities can be obtained from the bigram tables..
@@ -61,8 +90,5 @@ choose_trigrams_bigrams_kneser_ney_interpolation <- function(t, b, word){
   tri_bi[is.na(tri_bi)] = 0
   tri_bi[, p_ikn:=p_ikn.x + du*tu/cu * p_ikn.y]
   
-  tri_bi[order(-p_ikn), .(end)][1:min(3, .N)]
-  
-  
-  
+  tri_bi[order(-p_ikn), .(end)][1:min(3, .N), end]
 }
