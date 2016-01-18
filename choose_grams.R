@@ -1,15 +1,23 @@
 empty_DT <- function (dt){
   if (is.null(dt))
     return (TRUE)
-  return (nrow(dt) == 0)
+  if (nrow(dt) == 0)
+    return (TRUE)
+  if ((nrow(dt) == 1) && is.na(dt[, count] ))
+    return (TRUE)
+  return (FALSE)
+}
+
+return_result <- function(t){
+  head(t[, end], 3)
 }
 
 choose_grams <- function(t, b, u, word){
   # t := trigrams, b:= bigrams, u:= unigrams
   if (empty_DT(t)){
     if (empty_DT(b))
-      return (u[1])
-    return (b[1])
+      return (return_result(u))
+    return (return_result(b))
   }
   
   # choose_trigrams_bigrams_kneser_ney_interpolation(t, b, word)
@@ -24,7 +32,7 @@ choose_trigrams_bigrams_stupid_backoff <- function (t, b){
   new <- new[order(-count.x, -count.y)]
   # new[1:min(3, length(end)), end]
   #print(new[, end])
-  new[1:min(3, length(new)), end]
+  return_result(new)
 }
 
 
@@ -32,7 +40,7 @@ choose_trigrams_bigrams_kneser_ney_no_unigram_interpolation <- function(t, b, wo
   # smoothen the trigrams probabilities
   
   # discounting factor
-  du_tri = 0.01
+  du_tri = log(t[, count])
   cu = sum(t[, count])
   tu= nrow(t)
   
@@ -51,7 +59,7 @@ choose_trigrams_bigrams_kneser_ney_no_unigram_interpolation <- function(t, b, wo
   tri_bi[is.na(tri_bi)] = 0
   tri_bi[, p_ikn:=p_ikn.x + du*tu/cu * p_ikn.y]
   
-  tri_bi[order(-p_ikn), .(end)][1:min(3, .N), end]
+  return_result(tri_bi[order(-p_ikn), .(end)])
 }
 
 
@@ -90,5 +98,5 @@ choose_trigrams_bigrams_kneser_ney_interpolation <- function(t, b, word){
   tri_bi[is.na(tri_bi)] = 0
   tri_bi[, p_ikn:=p_ikn.x + du*tu/cu * p_ikn.y]
   
-  tri_bi[order(-p_ikn), .(end)][1:min(3, .N), end]
+  return_result(tri_bi[order(-p_ikn), .(end)])
 }

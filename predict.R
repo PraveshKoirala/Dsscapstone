@@ -6,7 +6,7 @@ source("cleanData.R")
 #source("loaddata.R")
 
 predict_unigram <- function(x_vector){
-  return ("the")
+  return (data.table(end="the"))
 }
 
 predict_bigram <- function(x){
