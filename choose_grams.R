@@ -32,7 +32,7 @@ choose_trigrams_bigrams_kneser_ney_no_unigram_interpolation <- function(t, b, wo
   # smoothen the trigrams probabilities
   
   # discounting factor
-  du_tri = log(log(t[,count]))
+  du_tri = 0.01
   cu = sum(t[, count])
   tu= nrow(t)
   

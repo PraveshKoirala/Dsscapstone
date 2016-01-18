@@ -69,3 +69,24 @@ Overall top-3 precision: 15.39 %
 Average runtime:         19.02 msec
 Number of predictions:   28464
 Total memory used:       118.42 MB
+
+
+KNESER-NEY du = 0.2
+--------
+Overall top-3 score:     12.52 %
+Overall top-1 precision: 8.99 %
+Overall top-3 precision: 15.48 %
+Average runtime:         19.20 msec
+Number of predictions:   28464
+Total memory used:       118.42 MB
+
+KNESER-NEY du=0.01 (no substantial improvement)
+--------
+Overall top-3 score:     12.52 %
+Overall top-1 precision: 8.99 %
+Overall top-3 precision: 15.48 %
+Average runtime:         19.61 msec
+Number of predictions:   28464
+Total memory used:       118.42 MB
+
+
