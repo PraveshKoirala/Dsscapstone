@@ -40,11 +40,12 @@ choose_trigrams_bigrams_kneser_ney_no_unigram_interpolation <- function(t, b, wo
   # smoothen the trigrams probabilities
   
   # discounting factor
-  du_tri = log(t[, count])
+  
   cu = sum(t[, count])
   tu= nrow(t)
+  du = log(max(t[,count]))
+  t[, p_ikn:= pmax(0, count - du)/cu]
   
-  t[, c("p_ikn", "du") := .(pmax(0, count - du_tri)/cu, du_tri)]
   
   # For the bigrams,
   # subset of the trigrams that contain the middle word as the follows

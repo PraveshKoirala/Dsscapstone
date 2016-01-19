@@ -3,7 +3,7 @@ require(data.table)
 
 source("choose_grams.R")
 source("cleanData.R")
-#source("loaddata.R")
+source("loaddata.R")
 
 predict_unigram <- function(x_vector){
   return (data.table(end="the"))
