@@ -1,11 +1,11 @@
 library(shiny)
-
+library(shinythemes)
 
 
 shinyUI(
   
   # Use a fluid Bootstrap layout
-  fluidPage(    
+  fluidPage(theme=shinytheme("cosmo"),    
     
     # Give the page a title
     titlePanel("Next word prediction"),

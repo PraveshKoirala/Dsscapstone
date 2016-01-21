@@ -20,7 +20,7 @@ choose_grams <- function(t, b, u, word){
     return (return_result(b))
   }
   
-  # choose_trigrams_bigrams_kneser_ney_interpolation(t, b, word)
+  #choose_trigrams_bigrams_kneser_ney_interpolation(t, b, word)
   choose_trigrams_bigrams_kneser_ney_no_unigram_interpolation(t, b, word)
   #choose_trigrams_bigrams_stupid_backoff(t, b)
 }

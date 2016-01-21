@@ -3,8 +3,11 @@ library(shiny)
 source("predict.R")
 
 getPredictions <- function(phrase){
-  predictions <- predict(phrase)
-  predictions[is.na(predictions)] <- ""
+  predictions <- c('', '', '')
+  p <- predict(phrase)
+  for (i in 1:length(p)){
+    predictions[i] <- p[i]
+  }
   predictions
 }
 
