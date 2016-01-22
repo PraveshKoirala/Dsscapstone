@@ -38,6 +38,7 @@ $P^{IKN}_{\pi(u)}(w)$  is the backoff probability of word w under context u
 </small>
 </small>
 
+
 Algorithm.. creating the model
 ========================================================
 <small>
@@ -66,18 +67,4 @@ Simply type the phrase in the textbox and the app will give the top three predic
 </small>
 
 
-Algorithm (II)
-=======================================================
-<small><small>
-- In English, Kneser-Ney interpolation method works by the observation that
-certain words are more likely given a certain context. <br>
-
-- A classical example of this is the word "San Francisco". By itself, the unigram
-"Francisco" is less likely to occur than the unigram "glasses". But under the context "San", it is much more likely than "glasses". (San glasses is simply unheard of).
-
-- Kneser-Ney accomplishes this by using the counts of the word after the context instead of its absolute count.
-
-- It also functions as smoothing model. It discounts a fixed value from the probability masses of higher order grams and assigns it to the lower order masses. In NextWord, the discount function used is $log(max(c_{uw}))$
-
-</small></small>
 
