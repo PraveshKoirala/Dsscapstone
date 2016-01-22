@@ -12,7 +12,7 @@ given the words preceding it.
 <br>
 Inspired from apps like Swiftkey, NextWord uses a corpus to build upto 3-gram models to give predictions.
 
-![Intro](introduction.jpg)
+![Intro](introduction.JPG)
 
 Algorithm
 ========================================================
@@ -24,21 +24,21 @@ and backoff model.
 <br>
 *[Kneser-Ney Interpolation](http://www.stats.ox.ac.uk/~teh/research/compling/hpylm.pdf) in a nutshell* 
 <br>
-![kneser-ney](kneser-ney.jpg)
+![kneser-ney](kneser-ney.JPG)
 
 $Where:$ <br>
 
 $P^{IKN}_{\pi(u)}(w)$ is the interpolated kneser-ney probability for word $w$ given context $u$ <br>
-$c_u$ : The count for the context u <br>
-$c_{uw}$ : The count for the word w under context u <br>
-$d_{|u|}$ : Discount for context length u <br>
-$t_u$ : Count for the context u <br>
-$P^{IKN}_{\pi(u)}(w)$ : The backoff probability of word w under context u
+$c_u$  is the count for the context u <br>
+$c_{uw}$  is the count for the word w under context u <br>
+$d_{|u|}$  is the discount value for context length u <br>
+$t_u$  is the count for the context u <br>
+$P^{IKN}_{\pi(u)}(w)$  is the backoff probability of word w under context u
 
 </small>
 </small>
 
-Algorithm.. creating the corpus
+Algorithm.. creating the model
 ========================================================
 <small>
 Cleaning: 
@@ -60,8 +60,8 @@ The APP *badum tiss*
 
 <small>
 The app is hosted [here](https://praveshkoirala.shinyapps.io/NextWord/)<br><br>
-![app](app.jpg)
-<br>
+![app](app.JPG)
+<br><br>
 Simply type the phrase in the textbox and the app will give the top three predictions. (first prediction might be a bit slow)
 </small>
 
